@@ -1,0 +1,45 @@
+Setup 
+ 
+$ git --version 
+ 
+$ git config --global user.name "your name" 
+$ git config --global user.emai."your email address" 
+ 
+$ git config --list 
+ 
+$ git help config 
+$ git config --help 
+ 
+Track code baes on local machine 
+ 
+$ git init 
+ 
+$ git status 
+$ git log 
+ 
+$ touch .gitignore // for files you do NOT want tracked 
+ 
+$ git add –A 
+$ git reset // will remove all files from staging area 
+ 
+$ git commit –m "add detail about changes" 
+ 
+ 
+Working with a remote repository  
+ 
+$ git clone <url> //where to clone . 
+$ git clone https://github.com/RemoteRepoYouWantToClone . 
+ 
+$ git remote –v 
+$ git branch -a 
+  
+Commit changes as we did before 
+$ git diff 
+$ git status 
+$ git add -A 
+$ git commit –m "add detail about changes" 
+ 
+Then push 
+$ git pull origin master 
+$ git push origin master 
+ 
