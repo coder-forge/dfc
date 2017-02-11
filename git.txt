@@ -42,4 +42,15 @@ $ git commit –m "add detail about changes"
 Then push 
 $ git pull origin master 
 $ git push origin master 
+
+Working with branches 
  
+$ git branch development 
+$ git checkout development 
+ 
+$ git branch //will show all branchs and current branch 
+ 
+$ git push –u origin development  //-u associates branch the first time  
+ 
+$ git pull 
+$ git push
