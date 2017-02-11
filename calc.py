@@ -11,6 +11,7 @@ class MainFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, title=title, size=size)
         
+        self.NumpadDigits = (wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, wx.WXK_NUMPAD8, wx.WXK_NUMPAD9)
         self.floating = False
         
         # here we call a method to setup the visual aspect of the user interface
@@ -62,7 +63,8 @@ class MainFrame(wx.Frame):
         # important note:
         # with 'self.' prefix we can reach out of this method's body
         # and affect the "Sizer" property of the "MainFrame" object
-        self.SetSizer(sizer)
+        #self.SetSizeHints(self)
+        self.SetSizerAndFit(sizer)
 
     def make_panel(self, size, color):
         panel = wx.Panel(self, wx.ID_ANY, size=size)
@@ -176,14 +178,47 @@ class MainFrame(wx.Frame):
         return panel
 
 
+    def Clear(self):
+        if self.floating == True: self.floating = False     # reset decimal-point flag
+        self.display.SetValue("0")                          # arbitrarily reset display string
+
+    def DecPt(self, pt):
+        if self.floating == False:
+            self.display.SetValue(self.display.GetValue() + pt)
+            self.floating = True
+
+
     def OnKeyDown(self, evt):
         key = evt.GetKeyCode()
+        value = self.display.GetValue()
 
         if key == wx.WXK_ESCAPE or key == ord('Q'):
             self.OnClose(evt)
 
+        # Clear key
+        elif key == wx.WXK_DELETE or key == ord('C'):
+            print "** KEY: CLEAR"
+            self.Clear()
+
+        # Floating point (period) key
+        elif key in (wx.WXK_NUMPAD_DECIMAL, ord('.'), ord(',')):
+            print "** KEY: DEC-PT"
+            self.DecPt(".")
+
+        # Numpad number keys
+        elif key in self.NumpadDigits:
+            print "** KEY: DIGIT (NUMPAD)", chr(ord("0") + key - wx.WXK_NUMPAD0)
+            if value == "0": self.display.SetValue("")                      # remove solitary ZERO from display
+            self.display.SetValue(self.display.GetValue() + chr(ord("0") + key - wx.WXK_NUMPAD0))       # append digit to display string
+
+        for i in xrange(0,10):
+            if key == ord(str(i)):
+                print "** KEY: DIGIT", i
+                if value == "0": self.display.SetValue("")                  # remove solitary ZERO from display
+                self.display.SetValue(self.display.GetValue() + str(i))     # append digit to display string
+
         evt.Skip()
-        
+
 
     def OnButton(self, evt):
         button = evt.GetEventObject()
@@ -197,12 +232,9 @@ class MainFrame(wx.Frame):
 
         # Backspace button
         if button == self.btn_B:
-            if value == "0":
-                pass
-            else:
-                if self.display.GetValue()[-1:] == ".": self.floating = False
-                self.display.SetValue(self.display.GetValue()[0:-1])
-                if self.display.GetValue() == "": self.display.SetValue("0")
+            if self.display.GetValue()[-1:] == ".": self.floating = False
+            self.display.SetValue(self.display.GetValue()[0:-1])
+            if self.display.GetValue() == "": self.display.SetValue("0")
 
         # Open parenthesis button
         if button == self.btn_p:
@@ -222,10 +254,9 @@ class MainFrame(wx.Frame):
             self.display.SetValue(self.display.GetValue() + button.GetLabel())
 
         # Floating point button
-        if button == self.btn_F:
-            if self.floating == False:
-                self.display.SetValue(self.display.GetValue() + button.GetLabel())
-                self.floating = True
+        elif button == self.btn_F:
+            print "** BTN: DEC-PT"
+            self.DecPt(button.GetLabel())
 
         # Division button
         if button == self.btn_D:
@@ -262,7 +293,6 @@ class MainFrame(wx.Frame):
     # here we define an event handler method, that during initialisation 
     # we associate with respective event (see line 20)
     def OnClose(self, event):
-        print "OnClose 1"
         self.HideWithEffect(wx.SHOW_EFFECT_BLEND, 400)
         self.Destroy()
         event.Skip()
