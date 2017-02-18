@@ -1,8 +1,22 @@
+# coding: iso8859_1
+
 import wx
 
 ############################################################################################################################
+version = '0.1.17021815'
 
-version = '0.1.17021720'
+""" CHANGES:
+
+_?___No__Line_______Comment_________________________________________________________________________________________________
+[+] =01= :8:        Added this CHANGES header
+[+] =02= :1:        Added the file coding in the 1st line
+[*] =03= :42,320:   Streamlined the MainFrame constructor, removed unnecessary args
+[*] =04= :46:       Modified the NumpadDigitKeys list to xrange object
+[-] =05= :109:      Removed the make_panel() method, along with 2 references
+[-] =06= :182:      Removed previously commented out lines from make_buttonsPanel() method
+"""
+############################################################################################################################
+
 appTitle= "CoderForge Calculator"
 
 
@@ -19,11 +33,17 @@ class MainFrame(wx.Frame):
         'Green' : "#55AA55",
     }
 
-    # the constructor takes 4 arguments
-    def __init__(self, parent, title, size):
-        wx.Frame.__init__(self, parent, title=title, size=size)
+    # Our constructor doesn't need to take any explicit arguments,
+    # "parent" and "title=" can be arbitrarily set in the default constructor,
+    # and we don't need "size=" at all, since we have enough content to determine the geometry by sizers.
+    # On the other hand we could use "style=" to give the title bar more consistent structure.
+    #def __init__(self, parent, title, size):
+        #wx.Frame.__init__(self, parent, title=title, size=size)
+    def __init__(self):
+        wx.Frame.__init__(self, None, title=appTitle, style=wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN)
 
-        self.NumpadDigits = (wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, wx.WXK_NUMPAD8, wx.WXK_NUMPAD9)
+        #self.NumpadDigitKeys = (wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, wx.WXK_NUMPAD8, wx.WXK_NUMPAD9)
+        self.NumpadDigitKeys = xrange( wx.WXK_NUMPAD0, wx.WXK_NUMPAD0+10 )
         self.floating = False
         self.btn = {}
 
@@ -83,16 +103,17 @@ class MainFrame(wx.Frame):
         # important note:
         # with 'self.' prefix we can reach out of this method's body
         # and affect the "Sizer" property of the "MainFrame" object
-        #self.SetSizeHints(self)
         self.SetSizerAndFit(sizer)
 
-    def make_panel(self, size, color):
-        panel = wx.Panel(self, wx.ID_ANY, size=size)
-        panel.SetBackgroundColour(color)
-        return panel
+    # This wrapper method doesn't seem to provide any benefit, only increases obscurity
+    #def make_panel(self, size, color):
+        #panel = wx.Panel(self, wx.ID_ANY, size=size)
+        #panel.SetBackgroundColour(color)
+        #return panel
 
     def make_historyPanel(self):
-        panel = self.make_panel((200,80), '#BADA55')
+        panel = wx.Panel(self, wx.ID_ANY, size=(200,80))
+        panel.SetBackgroundColour('#BADA55')
         sizer = wx.BoxSizer(wx.VERTICAL)
         panel.SetSizer(sizer)
         return panel
@@ -111,7 +132,7 @@ class MainFrame(wx.Frame):
         return panel
 
     def make_buttonsPanel(self):
-        panel = self.make_panel((200,200), '#DA55BA')
+        panel = wx.Panel(self)
 
         # instead of setting certain attributes (like font and event handler) to the individual buttons,
         # we assign them to a parent Panel, from which the buttons will inherit
@@ -159,82 +180,7 @@ class MainFrame(wx.Frame):
             self.btn[name].SetBackgroundColour(color)
             sizer.Add(self.btn[name], pos, span=spn, flag=wx.EXPAND|wx.ALL, border=2)
 
-        # since our loop above appears to work well, we can scratch the individual instrutions below:
-
-        #self.btn_C = wx.Button(panel, label='C', size=(36,36))
-        #self.btn_C.SetBackgroundColour('#E08080')
-
-        #self.btn_p = wx.Button(panel, label='(', size=(36,36))
-        #self.btn_p.SetBackgroundColour('#55AAFF')
-
-        #self.btn_q = wx.Button(panel, label=')', size=(36,36))
-        #self.btn_q.SetBackgroundColour('#55AAFF')
-
-        #self.btn_P = wx.Button(panel, label='%', size=(36,36))
-        #self.btn_P.SetBackgroundColour('#55AAFF')
-        ##self.btn_B = wx.Button(panel, label=u'\u2190', size=(36,36))
-        #self.btn_B = wx.Button(panel, label=u'\N{leftwards white arrow}', size=(36,36))
-        #self.btn_B.SetBackgroundColour('#E08080')
-        #self.btn['B'].SetFont(self.buttonsFont.MakeLarger())
-
-        #self.btn_7 = wx.Button(panel, label='7', size=(36,36))
-        #self.btn_8 = wx.Button(panel, label='8', size=(36,36))
-        #self.btn_9 = wx.Button(panel, label='9', size=(36,36))
-
-        #self.btn_D = wx.Button(panel, label=u'\N{division sign}', size=(36,36))
-        #self.btn_D.SetBackgroundColour('#55AAFF')
-        #self.btn_S = wx.Button(panel, label=u'\N{minus sign}', size=(36,36))
-        #self.btn_S.SetBackgroundColour('#55AAFF')
-
-        #self.btn_4 = wx.Button(panel, label='4', size=(36,36))
-        #self.btn_5 = wx.Button(panel, label='5', size=(36,36))
-        #self.btn_6 = wx.Button(panel, label='6', size=(36,36))
-
-        #self.btn_M = wx.Button(panel, label=u'\N{multiplication sign}', size=(36,36))
-        #self.btn_M.SetBackgroundColour('#55AAFF')
-        #self.btn_A = wx.Button(panel, label='+', size=(36,36))
-        #self.btn_A.SetBackgroundColour('#55AAFF')
-
-        #self.btn_1 = wx.Button(panel, label='1', size=(36,36))
-        #self.btn_2 = wx.Button(panel, label='2', size=(36,36))
-        #self.btn_3 = wx.Button(panel, label='3', size=(36,36))
-
-        #self.btn_R = wx.Button(panel, label=u'\N{square root}', size=(36,36))
-        #self.btn_R.SetBackgroundColour('#55AAFF')
-        #self.btn_N = wx.Button(panel, label=u'\N{plus-minus sign}', size=(36,36))
-        #self.btn_N.SetBackgroundColour('#55AAFF')
-
-        #self.btn_0 = wx.Button(panel, label='0', size=(36,36))
-
-        #self.btn_F = wx.Button(panel, label='.', size=(36,36))
-        #self.btn_E = wx.Button(panel, label='=', size=(36,36))
-        #self.btn_E.SetBackgroundColour('#55AA55')
-
-        #sizer.Add(self.btn_C, (0,0), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_p, (0,1), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_q, (0,2), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_P, (0,3), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_B, (0,4), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_7, (1,0), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_8, (1,1), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_9, (1,2), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_D, (1,3), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_S, (1,4), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_4, (2,0), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_5, (2,1), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_6, (2,2), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_M, (2,3), flag=wx.EXPAND|wx.ALL, border=2)
-        ## the ADD btn will stretch through 2 rows
-        #sizer.Add(self.btn_A, (2,4), span=(2,1), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_1, (3,0), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_2, (3,1), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_3, (3,2), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_R, (3,3), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_N, (4,0), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_0, (4,1), flag=wx.EXPAND|wx.ALL, border=2)
-        #sizer.Add(self.btn_F, (4,2), flag=wx.EXPAND|wx.ALL, border=2)
-        ## the EQUALS button will stretch through 2 columns
-        #sizer.Add(self.btn_E, (4,3), span=(1,2), flag=wx.EXPAND|wx.ALL, border=2)
+        self.btn['B'].SetFont(self.buttonsFont.MakeLarger())
 
         panel.SetSizer(sizer)
         return panel
@@ -276,7 +222,7 @@ class MainFrame(wx.Frame):
             self.DecPt(".")
 
         # Numpad number keys
-        elif key in self.NumpadDigits:
+        elif key in self.NumpadDigitKeys:
             print "** KEY: DIGIT (NUMPAD)", chr(ord("0") + key - wx.WXK_NUMPAD0)
             if value == "0": self.display.SetValue("")                      # remove solitary ZERO from display
             self.display.SetValue(self.display.GetValue() + chr(ord("0") + key - wx.WXK_NUMPAD0))       # append digit to display string
@@ -371,6 +317,5 @@ class MainFrame(wx.Frame):
 if __name__ == '__main__':
 
     app = wx.App(redirect=True)
-    topWindow = MainFrame(None, appTitle, (300,400))
+    topWindow = MainFrame() # removed obsolete args
     app.MainLoop()
-
