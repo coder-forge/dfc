@@ -1,0 +1,24 @@
+CHANGES
+
+This entry tries to explain the format of the CHANGES message used with commits.
+
+The message takes advantage of monotype font to distribute the information over 4 columns:
+
+- 1st column contains the Category of the CHANGE, indicated in the source file by "_?_" header
+	It can be one of the following:
+	[+]	- addition, when the CHANGE involves some new lines of code added
+	[*] - modification, when the CHANGE involves some existing lines of code modified
+	[-] - deletion, when the CHANGE involves some existing lines of code removed
+
+- 2nd column contains the Ordinal Number of the CHANGE, indicated in the source file by "_No_" header
+	It takes a form of two-digit number (with leading zero when necessary) enclosed in "=" signs
+
+- 3rd column contains the Line Number(s), where the CHANGE occurs, indicated in the source file by "Line" header
+	It may contain any of the following:
+	:N:		- single number indicating a single line of code or first line of a continuous block of code
+	:N-N:	- two numbers separated by a hyphen, indicating a discontinuous block of code
+	:N,N:	- two numbers separated by comma, indicating two lines of code, one of which contains a reference to the other
+
+- 4th column contains the Description of the CHANGE, indicated in the source file by "Comment" header
+	It suppose to be a brief summary, not the full explanation.
+	Actual details should be found in immediate proximity of the affected code.
